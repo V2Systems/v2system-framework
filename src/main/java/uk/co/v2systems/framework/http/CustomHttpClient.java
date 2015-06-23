@@ -1,11 +1,15 @@
 package uk.co.v2systems.framework.http;
 
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import uk.co.v2systems.framework.utils.KeyValuePair;
 import uk.co.v2systems.framework.utils.Methods;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -28,6 +32,7 @@ public class CustomHttpClient {
         HttpPost httpPost=null;
         HttpGet httpGet=null;
         HttpPut httpPut=null;
+        List<KeyValuePair> httpHeader=null;
         InputStreamEntity reqInputStreamEntity=null;
         File file = null, outfile = null;
         String lastHttpRequestStatus;
@@ -59,6 +64,30 @@ public class CustomHttpClient {
                 return 1; //Exception
             }
         }
+        public int setHeader(String key, String value){
+            if(key!=""){
+                if(httpHeader==null)
+                    httpHeader= new LinkedList<KeyValuePair>();
+                KeyValuePair kv = new KeyValuePair(key,value);
+                httpHeader.add(kv);
+                return 0;
+            }
+            else {
+                Methods.printConditional("Error in CustomHttpClient.setHeader \nPlease ensure header is correct!");
+                return 1; //Exception
+            }
+        }
+        public void getHeader(){
+            if(httpHeader!=null){
+                for(int i=0; i<httpHeader.size();i++)
+                Methods.printConditional(httpHeader.get(i).getKey()+"::"+httpHeader.get(i).getValue());
+            }
+        }
+        public void clearHeader(){
+            if(httpHeader!=null)
+                httpHeader.removeAll(httpHeader);
+        }
+
         public void setResponseFile(String filename){
             this.outfile = new File(filename);
         }
@@ -66,18 +95,22 @@ public class CustomHttpClient {
             return this.url;
         }
 
-        public void setHeader(){
-
-        }
-
         public int post(){
+            return post(false);
+        }
+        public int post(boolean verbose){
             try {
                 if(file!=null) {
                     httpPost = new HttpPost(this.url);
                     httpPost.setEntity(reqInputStreamEntity);
+                    this.assignHeader(httpPost);
                     //Print details of POST Request
                     Methods.printConditional("\n" + httpPost.getRequestLine());
+                    //list all set header
                     Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
+                    Header headers[] = httpGet.getAllHeaders();
+                    for(Header h:headers)
+                        Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                     //Response
                     HttpResponse response = httpClient.execute(httpPost);
                     printHttpResponse(response);
@@ -93,10 +126,19 @@ public class CustomHttpClient {
             }
         }
         public int get(){
+        return get(false);
+    }
+        public int get(boolean verbose){
             try{
-                //Print details of GET Request
+
                 httpGet = new HttpGet(this.url);
-                System.out.println("\n"+httpGet.getRequestLine());
+                this.assignHeader(httpGet);
+                //Print details of GET Request
+                Methods.printConditional("\n" + httpGet.getRequestLine(),verbose);
+                //list all set header
+                Header headers[] = httpGet.getAllHeaders();
+                for(Header h:headers)
+                Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                 //Response
                 HttpResponse response = httpClient.execute(httpGet);
                 printHttpResponse(response);
@@ -107,13 +149,21 @@ public class CustomHttpClient {
             }
         }
         public int put(){
+            return put(false);
+        }
+        public int put(boolean verbose){
             try{
                 if(file!=null) {
                     httpPut = new HttpPut(this.url);
                     httpPut.setEntity(reqInputStreamEntity);
+                    this.assignHeader(httpPut);
                     //Print details of PUT Request
                     Methods.printConditional("\n" + httpPut.getRequestLine());
+                    //listing request headers
                     Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
+                    Header headers[] = httpGet.getAllHeaders();
+                    for(Header h:headers)
+                        Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                     //Response
                     HttpResponse response = httpClient.execute(httpPut);
                     printHttpResponse(response);
@@ -126,6 +176,15 @@ public class CustomHttpClient {
             }catch(Exception e){
                 System.out.println("Exception in CustomHttpClient.put");
                 return 1; //Exception
+            }
+        }
+
+        public void assignHeader(HttpRequestBase httpRequestBase){
+            //setting headers
+            if(httpHeader!=null) {
+                for (int i = 0; i < httpHeader.size(); i++) {
+                    httpRequestBase.setHeader(httpHeader.get(i).getKey(), httpHeader.get(i).getValue());
+                }
             }
         }
 
