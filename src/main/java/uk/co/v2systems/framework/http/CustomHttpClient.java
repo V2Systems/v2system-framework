@@ -75,7 +75,7 @@ public class CustomHttpClient {
                 if(file!=null) {
                     httpPost = new HttpPost(this.url);
                     httpPost.setEntity(reqInputStreamEntity);
-                    //What is POST Request
+                    //Print details of POST Request
                     Methods.printConditional("\n" + httpPost.getRequestLine());
                     Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
                     //Response
@@ -94,7 +94,7 @@ public class CustomHttpClient {
         }
         public int get(){
             try{
-                //What is GET Request
+                //Print details of GET Request
                 httpGet = new HttpGet(this.url);
                 System.out.println("\n"+httpGet.getRequestLine());
                 //Response
@@ -111,7 +111,7 @@ public class CustomHttpClient {
                 if(file!=null) {
                     httpPut = new HttpPut(this.url);
                     httpPut.setEntity(reqInputStreamEntity);
-                    //What is PUT Request
+                    //Print details of PUT Request
                     Methods.printConditional("\n" + httpPut.getRequestLine());
                     Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
                     //Response
