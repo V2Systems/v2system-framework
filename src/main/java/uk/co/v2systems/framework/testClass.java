@@ -11,14 +11,15 @@ import uk.co.v2systems.framework.utils.Methods;
 public class testClass {
 
         public static void main(String args[]) {
-            //CustomSqlClient sql = new CustomSqlClient();
-            //sql.setConnectionDetails("oracle","172.22.20.151","1526","ASSSR2T","system","system_ASSSR2T");
-            //sql.getConnection();
-            //sql.executeQuery("select * from si_service");
-            //sql.getRowCount();
-            //sql.getResultSet();
+            CustomSqlClient sql = new CustomSqlClient();
+            sql.setConnectionDetails("sqlite","c:\\CDB.DB");
+            sql.connect();
+            sql.getConnectionDetails();
+            sql.executeQuery("select distinct CAI.CAMPAIGN_ID from INSTANCES I, CAI Where CAI.AD_INSTANCE_ID = I.AD_INSTANCE_ID AND I.AVAIL_STAT=1 LIMIT 10");
+            sql.getRowCount();
+            sql.getResultSet();
 
-            Methods.printConditional(CustomDate.getMJDDate(CustomDate.getLongDateTime()));
+            //Methods.printConditional(CustomDate.getMJDDate(CustomDate.getLongDateTime()));
 
         }
 }

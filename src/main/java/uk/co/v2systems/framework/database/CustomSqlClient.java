@@ -4,16 +4,19 @@ package uk.co.v2systems.framework.database;
  * Created by Pankaj Buchade on 23/06/2015.
  */
 import uk.co.v2systems.framework.utils.Methods;
-
 import java.sql.*;
 import java.util.Properties;
 
+//Supports both Oracle and SqLite connections
 public class CustomSqlClient {
-
-    static Connection conn = null;
-    static String dbms;
+//oracle specific variables
     static String serverName;
     static String portNumber = "1525";
+//sqLite specific variables
+    static String dbFileName;
+//Common variable
+    static Connection conn = null;
+    static String dbms;
     static String dbName;
     static String userName;
     static String password;
@@ -23,7 +26,7 @@ public class CustomSqlClient {
     static int rowCount=0;
     static ResultSetMetaData resultSetMetadata;
 
-//Set Connection properties
+//Set Connection properties for Oracle DB Connection
     public void setConnectionDetails(String dbms, String serverName, String portNumber, String dbName, String userName, String password){
         this.dbms=dbms;
         this.serverName=serverName;
@@ -32,29 +35,48 @@ public class CustomSqlClient {
         this.userName=userName;
         this.password=password;
     }
-    public void getConnectionDetails(){
-        Methods.printConditional("Database:"+dbms);
-        Methods.printConditional("HostName:"+serverName);
-        Methods.printConditional("DB Port:"+portNumber);
-        Methods.printConditional("DB Name:"+dbName);
-        Methods.printConditional("DB UserName:"+userName);
-        Methods.printConditional("Password:"+password);
+//Set Connection properties for SQLite Connection
+    public void setConnectionDetails(String dbms, String dbFileName){
+        this.dbFileName =dbFileName;
+        this.dbms=dbms;
     }
-//Establish Connection to Oracle Database
-    public Connection getConnection(){
+    public void getConnectionDetails(){
+        //Common Details
+        Methods.printConditional("\nDatabase: "+dbms);
+        if(dbms.equalsIgnoreCase("oracle")){
+            Methods.printConditional("\nHostName: "+serverName);
+            Methods.printConditional("\nDB Port: "+portNumber);
+        }
+        if(dbms.equalsIgnoreCase("sqlite")){
+            Methods.printConditional("\nDB File Name: "+dbFileName);
+        }
+            Methods.printConditional("\nDB Name: "+dbName);
+            Methods.printConditional("\nDB UserName: "+userName);
+            Methods.printConditional("\nPassword: "+password);
+    }
+//Establish Connection to Database
+    public Connection connect(){
         try{
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            Properties connectionProps = new Properties();
-            connectionProps.put("user", this.userName);
-            connectionProps.put("password", this.password);
-            if (this.dbms.equals("oracle")) {
-                conn = DriverManager.getConnection(
-                        "jdbc:" + this.dbms + ":thin:@" +
-                                this.serverName +
-                                ":" + this.portNumber + ":"+
-                                this.dbName, connectionProps );
+            if(dbms.equalsIgnoreCase("oracle")) {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+                Properties connectionProps = new Properties();
+                connectionProps.put("user", this.userName);
+                connectionProps.put("password", this.password);
+                    conn = DriverManager.getConnection(
+                            "jdbc:" + this.dbms + ":thin:@" +
+                                    this.serverName +
+                                    ":" + this.portNumber + ":" +
+                                    this.dbName, connectionProps);
+                Methods.printConditional("Connected to database: " + this.serverName + "::" + this.dbName);
             }
-            System.out.println("Connected to database: " + this.serverName +"::"+ this.dbName);
+            if(dbms.equalsIgnoreCase("sqlite")){
+                Class.forName("org.sqlite.JDBC");
+                Properties connectionProps = new Properties();
+                    conn = DriverManager.getConnection(
+                            "jdbc:" + this.dbms + ":" +
+                                    this.dbFileName, connectionProps );
+                Methods.printConditional("Connected to sqlLite database File: " + this.dbFileName);
+            }
             return conn;
         }catch(Exception e){
             System.out.println("Error While establishing sql connection...\n" +e);
@@ -79,10 +101,10 @@ public class CustomSqlClient {
     public ResultSet getResultSet(){
         return getResultSet(true);
     }
-//getResultSet can be controlled as verbose or non verbose
+//getResultSet can be controlled as verbose or non verbose also used by getRowCount
     public ResultSet getResultSet(boolean verbose){
         try{
-            System.out.print("SQL: "+ this.queryString +"\n");
+            Methods.printConditional("\nSQL: " + this.queryString + "\n");
             int numberOfRows = 0;
             rowCount=0;
             //printing column Headers

@@ -46,6 +46,12 @@
             <artifactId>jodd-jtx</artifactId>
             <version>3.6.3</version>
         </dependency>
+        <dependency>
+            <!--> SQlite Drivers<-->
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.8.7</version>
+        </dependency>
     </dependencies>
 
 </project>
