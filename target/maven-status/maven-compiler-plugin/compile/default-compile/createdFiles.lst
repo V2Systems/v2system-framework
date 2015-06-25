@@ -1,3 +1,5 @@
 uk\co\v2systems\framework\utils\Methods.class
-uk\co\v2systems\framework\http\CustomHttpClient.class
+uk\co\v2systems\framework\utils\KeyValuePair.class
 uk\co\v2systems\framework\testClass.class
+uk\co\v2systems\framework\http\CustomHttpClient.class
+uk\co\v2systems\framework\database\CustomSqlClient.class

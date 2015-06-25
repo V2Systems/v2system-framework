@@ -34,15 +34,15 @@ public class CustomHttpClient {
         HttpPut httpPut=null;
         List<KeyValuePair> httpHeader=null;
         InputStreamEntity reqInputStreamEntity=null;
-        File file = null, outfile = null;
+        File sendFile = null, outfile = null;
         String lastHttpRequestStatus;
 
-
+        //Constructor
         public CustomHttpClient(String url){
             this.setUrl(url);
             httpClient = new DefaultHttpClient();
             //default File
-            //this.file = new File("c:\\post.xml");
+            //this.sendFile = new File("c:\\post.xml");
             //this.outfile = new File ("c:\\response.xml");
         }
 
@@ -50,12 +50,12 @@ public class CustomHttpClient {
             this.url = new String(url);
         }
 
-        public int setFile(String filename){
+        public int setSendFile(String filename){
             try {
-                this.file = new File(filename);
+                this.sendFile = new File(filename);
                 //set header
-                FileEntity entity = new FileEntity(file, "text/plain; charset=\"UTF-8\"");
-                reqInputStreamEntity = new InputStreamEntity(new FileInputStream(file), -1);
+                FileEntity entity = new FileEntity(sendFile, "text/plain; charset=\"UTF-8\"");
+                reqInputStreamEntity = new InputStreamEntity(new FileInputStream(sendFile), -1);
                 reqInputStreamEntity.setContentType("application/xml");
                 reqInputStreamEntity.setChunked(true);
                 return 0;
@@ -100,14 +100,14 @@ public class CustomHttpClient {
         }
         public int post(boolean verbose){
             try {
-                if(file!=null) {
+                if(sendFile !=null) {
                     httpPost = new HttpPost(this.url);
                     httpPost.setEntity(reqInputStreamEntity);
                     this.assignHeader(httpPost);
                     //Print details of POST Request
                     Methods.printConditional("\n" + httpPost.getRequestLine());
                     //list all set header
-                    Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
+                    Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
                     Header headers[] = httpGet.getAllHeaders();
                     for(Header h:headers)
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
@@ -153,14 +153,14 @@ public class CustomHttpClient {
         }
         public int put(boolean verbose){
             try{
-                if(file!=null) {
+                if(sendFile !=null) {
                     httpPut = new HttpPut(this.url);
                     httpPut.setEntity(reqInputStreamEntity);
                     this.assignHeader(httpPut);
                     //Print details of PUT Request
                     Methods.printConditional("\n" + httpPut.getRequestLine());
                     //listing request headers
-                    Methods.printConditional("Sending File: " + this.file + " Req Header:" + reqInputStreamEntity.getContentType());
+                    Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
                     Header headers[] = httpGet.getAllHeaders();
                     for(Header h:headers)
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
@@ -206,7 +206,6 @@ public class CustomHttpClient {
                     this.writeToFile(r);
                 }
                 return 0; //success
-
             }catch(Exception e){
                 System.out.println("Exception in CustomHttpClient.printHttpResponse");
                 return 1; //exception
@@ -229,7 +228,7 @@ public class CustomHttpClient {
                         System.out.println(line);
                     }
                 }
-                //close the file
+                //close the sendFile
                 w.close();
             }catch (Exception e){
                 System.out.println("Exception in CustomHttpClient.writeToFile");

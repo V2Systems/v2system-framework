@@ -35,11 +35,17 @@
             <version>2.44.0</version>
         </dependency>
         <dependency>
+            <!--> http client components<-->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.6</version>
         </dependency>
-
+        <dependency>
+            <!--> MJD Date conversion<-->
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-jtx</artifactId>
+            <version>3.6.3</version>
+        </dependency>
     </dependencies>
 
 </project>

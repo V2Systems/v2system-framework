@@ -11,11 +11,7 @@ import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -23,31 +19,17 @@ import java.util.List;
 //import cucumber.runtime.table.TableConverter;
 //import jodd.datetime.JDateTime;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.net.InetAddress;
-import java.net.URLDecoder;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by I&T Lab User on 26/02/2015.
  */
 public abstract class Methods {
 
     public static void printConditional(String printString, boolean print){
-        if(print)
-            System.out.println(printString);
+         if(print)
+            System.out.print(printString);
     }
     public static void printConditional(String printString){
-        System.out.println(printString);
+        System.out.print(printString);
     }
     public static String getLocalIP(){
         try {
@@ -114,13 +96,12 @@ public abstract class Methods {
 
     }
 */
+  //Convert String array to String List
     public static List<List<String>> arrayToListOfList(String[] stringArray){
         try {
             List<String> row;
             List<List<String>> table = new ArrayList<List<String>>();
-
-            for(int i=0; i< stringArray.length; i++)
-            {
+            for(int i=0; i< stringArray.length; i++) {
                 row=new ArrayList<String>();
                 row.add(0,stringArray[i].toString());
                 table.add(i,row);
@@ -130,7 +111,6 @@ public abstract class Methods {
             printConditional("Exception in Methods.arrayToListOfList :" + e);
             return null;
         }
-
     }
 
     public static List<List<String>> arrayToListOfList(String[] stringArray, int clashGroup[], int clashCount[]){
@@ -158,109 +138,30 @@ public abstract class Methods {
     }
 
     public static String[] generateNumericArrayList(String Header, int startingId, int requestedNumber) {
-
         String [] NumericArrayList = new String[requestedNumber+1];
         NumericArrayList[0]=Header;
-
-        for(int i=1; i<=requestedNumber; i++)
-        {
+        for(int i=1; i<=requestedNumber; i++) {
             NumericArrayList[i]=Integer.toString(startingId+i-1);
         }
-
         return NumericArrayList;
     }
-
+// int return int[]
     public static int[] intTointArray(int value) {
         int [] integer = {value};
         return integer;
     }
-
+// random int value return int[]
     public static int[]  intArrayGenerator(int length, int maxValue){
         int [] integerArray = new int[length];
-        for(int i=0; i<length;i++)
-            integerArray[i]= (int) (Math.random()* maxValue+1);
-
+        for(int i=0; i<length;i++) {
+            integerArray[i] = (int) (Math.random() * maxValue + 1);
+        }
         return integerArray;
-
     }
 
-    public static long getLongDateTime(){
-        Date referenceDateTime = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(referenceDateTime);
-        long longReferenceDateTime = referenceDateTime.getTime();
-        return longReferenceDateTime;
-    }
-    public static long getLongDateTime(Date referenceDateTime){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(referenceDateTime);
-        return referenceDateTime.getTime();
-    }
 
-    public static long getLongSeconds(long hhmmssMsMs){
-        long longSeconds=0; long MsMs=0; long ss=0; long mm=0; long hh=0;
-        for(int i=0; hhmmssMsMs>0; i++){
-            long quotient = hhmmssMsMs/100;
-            if(i==0)
-                MsMs = (hhmmssMsMs - quotient *100);
-            if(i==1)
-                ss = (hhmmssMsMs - quotient *100);
-            if(i==2)
-                mm = (hhmmssMsMs - quotient *100);
-            if(i==3)
-                hh = (hhmmssMsMs - quotient *100);
-            hhmmssMsMs=quotient;
-        }
 
-        longSeconds = hh * 3600000 + mm * 60000 + ss *1000;
-        return longSeconds;
-    }
 
-    public static Date getDateTime(){
-        Date referenceDateTime = new Date();
-        return referenceDateTime;
-    }
-    public static Date getDateTime(String strDateTime, String strDateTimeFormat){
-        try {
-            DateFormat dateFormat = new SimpleDateFormat(strDateTimeFormat);
-            return dateFormat.parse(strDateTime);
-
-        }catch(Exception e){
-            return new Date();
-        }
-    }
-
-    public static Date getDateTime(long longDateTime){
-        try {
-            return new Date(longDateTime);
-        }catch(Exception e){
-            return new Date();
-        }
-    }
-
-    public static String getDateTime(String strDateTimeFormat){
-        DateFormat dateFormat = new SimpleDateFormat(strDateTimeFormat);
-        return dateFormat.format(Methods.getDateTime(Methods.getLongDateTime()));
-    }
-    public static String getDateTime(String strDateTimeFormat, long longDateTime){
-        DateFormat dateFormat = new SimpleDateFormat(strDateTimeFormat);
-        return dateFormat.format(Methods.getDateTime(longDateTime));
-    }
-
-    /*
-    public static String getMJDDate(long longDateTime){
-    /*
-        Double doubleDateTime;
-        doubleDateTime= (double)  longDateTime * 25 / ( 86400000 * 25) +  2440587.5 - 2400001;
-        return String.format("%.7f",doubleDateTime);
-        //String.valueOf(doubleDateTime);
-        */
- /*       JDateTime jdt = new JDateTime(longDateTime);
-        jdt.addMillisecond(30000);
-        return jdt.getJulianDate().toString();
-
-    }
-*/
     public static void writeToFile(String content, String fileName){
         try {
             File file = new File(fileName);
