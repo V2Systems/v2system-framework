@@ -2,6 +2,8 @@ package uk.co.v2systems.framework;
 
 import uk.co.v2systems.framework.database.CustomSqlClient;
 import uk.co.v2systems.framework.http.CustomHttpClient;
+import uk.co.v2systems.framework.shell.CustomSshClient;
+import uk.co.v2systems.framework.shell.CustomTelnetClient;
 import uk.co.v2systems.framework.utils.CustomDate;
 import uk.co.v2systems.framework.utils.Methods;
 
@@ -11,13 +13,18 @@ import uk.co.v2systems.framework.utils.Methods;
 public class testClass {
 
         public static void main(String args[]) {
-            CustomSqlClient sql = new CustomSqlClient();
-            sql.setConnectionDetails("sqlite","c:\\CDB.DB");
-            sql.connect();
-            sql.getConnectionDetails();
-            sql.executeQuery("select distinct CAI.CAMPAIGN_ID from INSTANCES I, CAI Where CAI.AD_INSTANCE_ID = I.AD_INSTANCE_ID AND I.AVAIL_STAT=1 LIMIT 10");
-            sql.getRowCount();
-            sql.getResultSet();
+            //CustomSshClient.connect("172.26.128.26",22,"PBU10","Changeme_14");
+            //CustomSshClient.executeCommand("ls -ltr /apps ",true);
+            //CustomSshClient.executeCommand("ls -ltr /apps ",true);
+            //CustomSshClient.executeCommand("ls -ltr /apps ",true);
+
+            CustomTelnetClient  c = new CustomTelnetClient();
+            c.connect("10.66.56.9",23,"root","");
+            c.sendCommand("ls  /");
+            c.sendCommand("ls /bin #");
+            //c.sendCommand("sh");
+
+
 
             //Methods.printConditional(CustomDate.getMJDDate(CustomDate.getLongDateTime()));
 
