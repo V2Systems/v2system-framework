@@ -13,7 +13,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ojdbc7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.mina:mina-core:2.0.0-M4" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ftpserver:ftplet-api:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ftpserver:ftpserver-core:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-java:2.44.0" level="project" />
@@ -60,5 +59,7 @@
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.8.7" level="project" />
     <orderEntry type="library" name="Maven: ch.ethz.ganymed:ganymed-ssh2:build210" level="project" />
     <orderEntry type="library" name="Maven: commons-net:commons-net:3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.5.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.3" level="project" />
   </component>
 </module>
