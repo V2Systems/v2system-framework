@@ -7,6 +7,8 @@ import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.co.v2systems.framework.utils.Methods;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class CustomFtpServer implements Runnable {
         static FtpServer server;
         static String homeDir="c:/";
         public static volatile boolean stopRequest = false;
+        static Logger slf4jLogger = LoggerFactory.getLogger(CustomFtpServer.class);
 
         @Override
         public void run() {
@@ -52,19 +55,20 @@ public class CustomFtpServer implements Runnable {
                 server = serverFactory.createServer();
                 //serverFactory.createServer();
                 server.start();
-
             }catch(Exception e){
-                Methods.printConditional("Error in method FTPServer.start :- " + e);
+                slf4jLogger.error("Error in method FTPServer.start :- " + e);
             }
         }
 
         public static void stop(){
             try{
-                if(server!=null && stopRequest==true)
+                if(server!=null && stopRequest==true) {
                     server.stop();
-                System.out.println("FTP Server Stopped!");
+                    System.out.println("FTP Server Stopped!");
+                }
+
             }catch(Exception e){
-                Methods.printConditional("Error in method FTPServer.stop " + e);
+                slf4jLogger.error("Error in method FTPServer.stop " + e);
             }
 
         }

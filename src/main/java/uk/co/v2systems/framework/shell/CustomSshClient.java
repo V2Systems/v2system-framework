@@ -3,6 +3,8 @@ package uk.co.v2systems.framework.shell;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.co.v2systems.framework.utils.Methods;
 
 import java.io.*;
@@ -20,6 +22,7 @@ public class CustomSshClient {
     static String lastCommandStatus;
     static String lastCommandOutput;
     static boolean isAuthenticated=false;
+    static Logger slf4jLogger = LoggerFactory.getLogger(CustomSshClient.class);
 
     public static int connect(){
         if(hostname!=null && port!=-1 && username!=null && password !=null )
@@ -41,7 +44,7 @@ public class CustomSshClient {
             Methods.printConditional("\nconnected to server " + hostname);
             return 0;
         }catch(Exception e){
-            Methods.printConditional("\nException in CustomSshClient.connect: " + e.toString());
+            slf4jLogger.error("\nException in CustomSshClient.connect: " + e.toString());
             return 1; //Exception
         }
     }
@@ -59,7 +62,7 @@ public class CustomSshClient {
             }
             return 0;
         }catch(Exception e){
-            Methods.printConditional("\nException in CustomSshClient.connect: " + e.toString());
+            slf4jLogger.error("\nException in CustomSshClient.connect: " + e.toString());
             return 1; //Exception
         }
     }
@@ -94,7 +97,7 @@ public class CustomSshClient {
                 }
             }
             else
-                Methods.printConditional("\nNot connected to any server...! Please use method CustomSshClient.connect()");
+                slf4jLogger.error("\nNot connected to any server...! Please use method CustomSshClient.connect()");
         }catch(Exception e){
             CustomSshClient.close();
             return ("\nException in CustomSshClient.executeCommand: " + e);
@@ -117,7 +120,7 @@ public class CustomSshClient {
                 session.close();
             return 0;
         }catch(Exception  e){
-            Methods.printConditional("Exception in CustomSshClient.close: " + e.toString());
+            slf4jLogger.error("Exception in CustomSshClient.close: " + e.toString());
             return 1;
         }
     }

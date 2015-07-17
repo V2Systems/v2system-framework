@@ -1,6 +1,8 @@
 package uk.co.v2systems.framework.shell;
 
 import org.apache.commons.net.telnet.TelnetClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.co.v2systems.framework.utils.Methods;
 
 import java.io.DataInputStream;
@@ -22,6 +24,7 @@ public class CustomTelnetClient {
     static String username;
     static String password;
     static int port;
+    static Logger slf4jLogger = LoggerFactory.getLogger(CustomTelnetClient.class);
 
     public void connect(String hostname, int port, String username, String password){
         try{
@@ -38,7 +41,7 @@ public class CustomTelnetClient {
             write(password);
             readUntil(possiblePrompts);
         }catch(Exception e){
-            Methods.printConditional("Exception in TelnetClient.connect ::" + e);
+            slf4jLogger.error("Exception in TelnetClient.connect ::" + e);
         }
     }
 //Execute Command
@@ -47,7 +50,7 @@ public class CustomTelnetClient {
             write(command);
             return readUntil(possiblePrompts);
         }catch(Exception e){
-            Methods.printConditional("Exception in TelNetClient.sendCommand: " + e);
+            slf4jLogger.error("Exception in TelNetClient.sendCommand: " + e);
         }
         return null;
     }
@@ -57,7 +60,7 @@ public class CustomTelnetClient {
             if (telnetClient != null)
                 telnetClient.disconnect();
         }catch (Exception e){
-            Methods.printConditional("Exception in TelNetClient.disconnect: " + e);
+            slf4jLogger.error("Exception in TelNetClient.disconnect: " + e);
         }
     }
 //Read the command output
@@ -96,7 +99,7 @@ public class CustomTelnetClient {
             StringBuffer sb = new StringBuffer();
             char ch = ( char )dataInputStream.read();
             while( true ) {
-                System.out.print( ch );
+                System.out.print(ch);
                 sb.append( ch );
                 for(int i=0; i<pattern.length; i++){
                     if( ch == lastChars[i] ) {
