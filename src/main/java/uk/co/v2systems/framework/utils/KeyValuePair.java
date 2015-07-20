@@ -27,5 +27,19 @@ public class KeyValuePair {
         public void setValue(String value) {
             this.value = value;
         }
+        public void setKeyValue(String keyValue, char separatorChar){
+            //Separator exists then only assign values
+            if(keyValue.indexOf(separatorChar)!=-1) {
+                this.key = keyValue.substring(0, keyValue.indexOf(separatorChar));
+                this.value = keyValue.substring(keyValue.indexOf(separatorChar) + 1, keyValue.length());
+            }
+        }
+        public KeyValuePair(String keyValue, char separatorChar){
+            //Separator exists then only assign values
+            if(keyValue.indexOf(separatorChar)!=-1) {
+                this.key = keyValue.substring(0, keyValue.indexOf(separatorChar));
+                this.value = keyValue.substring(keyValue.indexOf(separatorChar) + 1, keyValue.length());
+            }
+        }
 }
 
