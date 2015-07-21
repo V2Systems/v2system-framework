@@ -45,19 +45,19 @@ public class testClass {
                 CustomXml xml = new CustomXml();
                 KeyValuePair keyValuePair;
                 List<KeyValuePair> attributes = new ArrayList<KeyValuePair>();
-                keyValuePair = new KeyValuePair("date=29",'=');
-                attributes.add(keyValuePair);
-
-                xml.createXml();
-                xml.addXmlTag("Schedule", null, "");
-                xml.addXmlTag("windows",attributes,"Schedule");
-                xml.addXmlTag("windows",null, "Schedule");
-                xml.addXmlTag("windows",null, "Schedule");
-                keyValuePair = new KeyValuePair("time=12:00:00",'=');
-                attributes.add(keyValuePair);
-                xml.addXmlTag("windows",attributes, "Schedule");
-                xml.addXmlTag("date",null,"windows",2);
+                attributes.add(new KeyValuePair("date=29",'='));
+                xml.openXml("c:\\xml.xml");
+                //xml.addXmlTag("Schedule", null,null, "");
+                xml.appendXmlTag("Windows", attributes, null, "Schedule");
+                attributes.add(new KeyValuePair("time=12:00:00", '='));
+                xml.appendXmlTag("Avail", null, null, "Windows");
+                xml.appendXmlTag("Spot", attributes, null, "Avail");
+                xml.appendXmlTag("ns2:substitutionOptionSlot", null, null, "Spot");
+                xml.appendXmlTag("ns2:adInSpot", null, null, "ns2:substitutionOptionSlot");
+                xml.appendXmlTag("ns2:campaignRef", null, null, "ns2:adInSpot");
+                xml.appendXmlTag("ns2:campaignIdRef", null, "1111", "ns2:campaignRef");
                 xml.printXml();
+                xml.writeXml("c:\\xml.xml");
 
                 //Methods.printConditional(CustomDate.getMJDDate(CustomDate.getLongDateTime()));
             }catch(Exception e){
