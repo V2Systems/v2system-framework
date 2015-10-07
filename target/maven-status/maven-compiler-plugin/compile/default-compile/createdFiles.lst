@@ -1,5 +1,12 @@
-uk\co\v2systems\framework\utils\Methods.class
-uk\co\v2systems\framework\utils\KeyValuePair.class
-uk\co\v2systems\framework\testClass.class
 uk\co\v2systems\framework\http\CustomHttpClient.class
+uk\co\v2systems\framework\files\CustomXml.class
+uk\co\v2systems\framework\shell\CustomTelnetClient.class
+uk\co\v2systems\framework\utils\KeyValuePair.class
 uk\co\v2systems\framework\database\CustomSqlClient.class
+uk\co\v2systems\framework\files\CustomFile.class
+uk\co\v2systems\framework\testClass.class
+uk\co\v2systems\framework\utils\Methods.class
+uk\co\v2systems\framework\utils\CustomDate.class
+uk\co\v2systems\framework\server\CustomFtpServer.class
+uk\co\v2systems\framework\shell\CustomSshClient.class
+uk\co\v2systems\framework\utils\ListKeyValuePair.class

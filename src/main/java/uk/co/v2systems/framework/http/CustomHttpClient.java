@@ -100,26 +100,25 @@ public class CustomHttpClient {
         }
         public int post(boolean verbose){
             try {
-                if(sendFile !=null) {
                     httpPost = new HttpPost(this.url);
                     httpPost.setEntity(reqInputStreamEntity);
                     this.assignHeader(httpPost);
                     //Print details of POST Request
                     Methods.printConditional("\n" + httpPost.getRequestLine());
+                    if(sendFile !=null) {
+                        Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
+                    }
+                    else{
+                        Methods.printConditional("Warning: No File selected! you csn select File using method setFile() before post()");
+                    }
                     //list all set header
-                    Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
-                    Header headers[] = httpGet.getAllHeaders();
+                    Header headers[] = httpPost.getAllHeaders();
                     for(Header h:headers)
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                     //Response
                     HttpResponse response = httpClient.execute(httpPost);
                     printHttpResponse(response);
                     return 0; //success
-                }else{
-                    Methods.printConditional("No File selected!\nPlease set File using method setFile() before post()");
-                    return 2;
-                }
-
             }catch(Exception e){
                 Methods.printConditional("Exception in CustomHttpClient.post");
                 return 1; //Exception
@@ -153,14 +152,18 @@ public class CustomHttpClient {
         }
         public int put(boolean verbose){
             try{
-                if(sendFile !=null) {
                     httpPut = new HttpPut(this.url);
                     httpPut.setEntity(reqInputStreamEntity);
                     this.assignHeader(httpPut);
                     //Print details of PUT Request
                     Methods.printConditional("\n" + httpPut.getRequestLine());
+                    if(sendFile !=null) {
+                        Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
+                    }
+                    else{
+                        Methods.printConditional("Warning: No File selected! you csn select File using method setFile() before put()");
+                    }
                     //listing request headers
-                    Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
                     Header headers[] = httpGet.getAllHeaders();
                     for(Header h:headers)
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
@@ -168,11 +171,6 @@ public class CustomHttpClient {
                     HttpResponse response = httpClient.execute(httpPut);
                     printHttpResponse(response);
                     return 0; //success
-                }else{
-                    Methods.printConditional("No File selected!\nPlease set File using method setFile() before put()");
-                    return 2;
-                }
-
             }catch(Exception e){
                 System.out.println("Exception in CustomHttpClient.put");
                 return 1; //Exception

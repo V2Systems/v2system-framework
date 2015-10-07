@@ -1,6 +1,7 @@
 package uk.co.v2systems.framework;
 
 import uk.co.v2systems.framework.database.CustomSqlClient;
+import uk.co.v2systems.framework.files.CustomFile;
 import uk.co.v2systems.framework.files.CustomXml;
 import uk.co.v2systems.framework.http.CustomHttpClient;
 import uk.co.v2systems.framework.server.CustomFtpServer;
@@ -8,6 +9,7 @@ import uk.co.v2systems.framework.shell.CustomSshClient;
 import uk.co.v2systems.framework.shell.CustomTelnetClient;
 import uk.co.v2systems.framework.utils.CustomDate;
 import uk.co.v2systems.framework.utils.KeyValuePair;
+import uk.co.v2systems.framework.utils.ListKeyValuePair;
 import uk.co.v2systems.framework.utils.Methods;
 
 import java.security.Key;
@@ -43,12 +45,13 @@ public class testClass {
                 ftpServer.setStopRequest(true);
                 */
                 CustomXml xml = new CustomXml();
-                KeyValuePair keyValuePair;
-                List<KeyValuePair> attributes = new ArrayList<KeyValuePair>();
-                attributes.add(new KeyValuePair("date=29",'='));
-                xml.openXml("c:\\xml.xml");
-                //xml.addXmlTag("Schedule", null,null, "");
-                xml.appendXmlTag("Windows", attributes, null, "Schedule");
+                //KeyValuePair keyValuePair;
+                //List<KeyValuePair> attributes = new ArrayList<KeyValuePair>();
+                //attributes.add(new KeyValuePair("added_pankaj=Pankaj",'='));
+                xml.openXml("c:\\work\\data\\EST_SINGLE_TITLE.xml");
+                //xml.appendXmlTag("ext:ProgramKey", attributes, "true", "core:Ext");
+
+                /*xml.appendXmlTag("Windows", attributes, null, "Schedule");
                 attributes.add(new KeyValuePair("time=12:00:00", '='));
                 xml.appendXmlTag("Avail", null, null, "Windows");
                 xml.appendXmlTag("Spot", attributes, null, "Avail");
@@ -56,10 +59,56 @@ public class testClass {
                 xml.appendXmlTag("ns2:adInSpot", null, null, "ns2:substitutionOptionSlot");
                 xml.appendXmlTag("ns2:campaignRef", null, null, "ns2:adInSpot");
                 xml.appendXmlTag("ns2:campaignIdRef", null, "1111", "ns2:campaignRef");
-                xml.printXml();
-                xml.writeXml("c:\\xml.xml");
+                */
+                //xml.printXml();
+                //System.out.print(xml.validateAgainstXSD("c:\\work\\data\\ADI.xsd"));
 
+/*
+                //xml.findElements("//Movie[1]/*[contains(.,'Widescreen')]");
+                //xml.updateElementValue(xml.findElementsByXpath("//Movie[1]/*[name()='content:SourceUrl']"), "Source_Pankaj");
                 //Methods.printConditional(CustomDate.getMJDDate(CustomDate.getLongDateTime()));
+                //all with attribute
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//*[@providerVersionNum]"), "providerVersionNum","44");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//*[@endDateTime]"), "endDateTime", "2018-12-31T22:59:59Z");
+                //replace the provider in all the attributes
+                xml.replaceElementAttributeValue(xml.findElementsByXpath("//*[@uriId]"), "uriId", "est__sbo_hd", "est__sbo_hd");
+                String today = CustomDate.getDateTime("ddMMyyyy");
+                String uriIdCounter=today+"0000000000";
+                xml.replaceElementAttributeValue(xml.findElementsByXpath("//*[@uriId]"), "uriId", "0000000000000000", uriIdCounter);
+
+                //linked objects parentContent
+                xml.replaceElementAttributeValue(xml.findElementsByXpath("//*[@type='parentContent']"), "object", "0000000000000000", uriIdCounter);
+                xml.replaceElementAttributeValue(xml.findElementsByXpath("//*[@type='MultiFormat']"), "object", "0000000000000000", uriIdCounter);
+
+                //Change the Asset Name
+                xml.updateElementValue(xml.findElementsByXpath("//Title//*[name()='title:TitleBrief']"), uriIdCounter);
+                xml.updateElementValue(xml.findElementsByXpath("//Title//*[name()='title:TitleMedium']"), "Automated Ingest - "+ uriIdCounter);
+                xml.updateElementValue(xml.findElementsByXpath("//Title//*[name()='title:TitleLong']"), "Automated Ingest - "+ uriIdCounter+ "Long");
+                /*
+
+                //Provider
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Title[@uriId]"), "uriId","est__sbo_hd/TITL2309201500000001");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Movie[@uriId]"), "uriId","est__sbo_hd/MAIN2309201500000001");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Thumbnail[@uriId]"), "uriId","est__sbo_hd/THEP2309201500000001");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//ContentGroup1[@uriId]"), "uriId","est__sbo_hd/CGVT2309201500000002");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//ContentGroup2[@uriId]"), "uriId","est__sbo_hd/CGPP2309201500000002");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Ext/*[name()='ext:PressPackImage']"), "uriId","est__sbo_hd/CGPP2309201500000001");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Offer[@uriId]"), "Offer","est__sbo_hd/OAVT2309201500000001");
+                xml.updateElementAttributeValue(xml.findElementsByXpath("//Terms[@uriId]"), "Terms","est__sbo_hd/TAVT2309201500000001");
+
+                */
+                //xml.writeXml("c:\\work\\data\\processedxml.xml");
+                CustomFile file = new CustomFile();
+                file.setFileName("c:\\work\\data\\appdata");
+                file.deleteFile();
+                file.appendToFile("30/09/2015");
+                System.out.print(file.getNumberOfLines() + ": ");
+                System.out.print(file.readLastLine());
+
+                ListKeyValuePair l= new ListKeyValuePair();
+                l.add("Asset:abc,id:pankaj",',');
+                l.add("id:pankajupdated",',');
+
             }catch(Exception e){
                 System.out.println("I am in main: " + e);
             }
