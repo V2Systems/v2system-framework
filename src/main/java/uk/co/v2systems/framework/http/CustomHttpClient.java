@@ -2,6 +2,8 @@ package uk.co.v2systems.framework.http;
 
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import uk.co.v2systems.framework.utils.KeyValuePair;
 import uk.co.v2systems.framework.utils.Methods;
 
@@ -32,6 +34,7 @@ public class CustomHttpClient {
         HttpPost httpPost=null;
         HttpGet httpGet=null;
         HttpPut httpPut=null;
+        MultipartEntityBuilder builder=null;
         List<KeyValuePair> httpHeader=null;
         InputStreamEntity reqInputStreamEntity=null;
         File sendFile = null, outfile = null;
@@ -102,14 +105,18 @@ public class CustomHttpClient {
             try {
                     httpPost = new HttpPost(this.url);
                     httpPost.setEntity(reqInputStreamEntity);
+                    if(builder!=null) {
+                        HttpEntity multipart = builder.build();
+                        httpPost.setEntity(multipart);
+                    }
                     this.assignHeader(httpPost);
                     //Print details of POST Request
-                    Methods.printConditional("\n" + httpPost.getRequestLine());
+                    Methods.printConditional("\n" + httpPost.getRequestLine(), verbose);
                     if(sendFile !=null) {
-                        Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
+                        Methods.printConditional("\nSending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType(), verbose);
                     }
                     else{
-                        Methods.printConditional("Warning: No File selected! you csn select File using method setFile() before post()");
+                        Methods.printConditional("\nWarning: No File selected! you can select File using method setFile() before post()", verbose);
                     }
                     //list all set header
                     Header headers[] = httpPost.getAllHeaders();
@@ -117,10 +124,10 @@ public class CustomHttpClient {
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                     //Response
                     HttpResponse response = httpClient.execute(httpPost);
-                    printHttpResponse(response);
-                    return 0; //success
+                    printHttpResponse(response, verbose);
+                return 0; //success
             }catch(Exception e){
-                Methods.printConditional("Exception in CustomHttpClient.post");
+                Methods.printConditional("\nException in [CustomHttpClient.post] : "+ e.toString());
                 return 1; //Exception
             }
         }
@@ -140,7 +147,7 @@ public class CustomHttpClient {
                 Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                 //Response
                 HttpResponse response = httpClient.execute(httpGet);
-                printHttpResponse(response);
+                printHttpResponse(response, verbose);
                 return 0; //success
             }catch(Exception e){
                 System.out.println("Exception in CustomHttpClient.get");
@@ -156,12 +163,12 @@ public class CustomHttpClient {
                     httpPut.setEntity(reqInputStreamEntity);
                     this.assignHeader(httpPut);
                     //Print details of PUT Request
-                    Methods.printConditional("\n" + httpPut.getRequestLine());
+                    Methods.printConditional("\n" + httpPut.getRequestLine(), verbose);
                     if(sendFile !=null) {
-                        Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType());
+                        Methods.printConditional("Sending File: " + this.sendFile + " Req Header:" + reqInputStreamEntity.getContentType(), verbose);
                     }
                     else{
-                        Methods.printConditional("Warning: No File selected! you csn select File using method setFile() before put()");
+                        Methods.printConditional("Warning: No File selected! you csn select File using method setFile() before put()", verbose);
                     }
                     //listing request headers
                     Header headers[] = httpGet.getAllHeaders();
@@ -169,7 +176,7 @@ public class CustomHttpClient {
                         Methods.printConditional("\nRequest Header: " + h.getName()+": "+h.getValue(),verbose);
                     //Response
                     HttpResponse response = httpClient.execute(httpPut);
-                    printHttpResponse(response);
+                    printHttpResponse(response, verbose);
                     return 0; //success
             }catch(Exception e){
                 System.out.println("Exception in CustomHttpClient.put");
@@ -186,16 +193,16 @@ public class CustomHttpClient {
             }
         }
 
-        private int printHttpResponse( HttpResponse response) {
+        private int printHttpResponse( HttpResponse response, boolean verbose) {
             try {
                 HttpEntity resEntity = response.getEntity();
                 //Single Line Response Status
                 lastHttpRequestStatus = response.getStatusLine().toString();
-                Methods.printConditional("\nRESPONSE: " + lastHttpRequestStatus);
+                Methods.printConditional("\nRESPONSE: " + lastHttpRequestStatus, verbose);
                 //List all Response Headers
                 Header[] resHeaders = response.getAllHeaders();
                 for (int i = 0; i < resHeaders.length; i++) {
-                    Methods.printConditional("Header: " + resHeaders[i].toString());
+                    Methods.printConditional("Header: " + resHeaders[i].toString(), verbose);
                 }
                 //reading Response
                 if(resEntity!=null) {
@@ -205,7 +212,7 @@ public class CustomHttpClient {
                 }
                 return 0; //success
             }catch(Exception e){
-                System.out.println("Exception in CustomHttpClient.printHttpResponse");
+                System.out.println("Exception in [CustomHttpClient.printHttpResponse]:" + e.toString());
                 return 1; //exception
             }
         }
@@ -213,27 +220,31 @@ public class CustomHttpClient {
             Charset charset = Charset.forName("US-ASCII");
             String line = null;
             try {
-                BufferedWriter w = Files.newBufferedWriter(outfile.toPath(), charset);
-
-                while ((line = r.readLine()) != null) {
-                    if(outfile.getName().toUpperCase().contains(".XML"))
-                    {
-                        w.write(line.replaceAll("><",">\n<"));
-                        System.out.println(line.replaceAll("><",">\n<"));
+                if(outfile!=null) {
+                    BufferedWriter w = Files.newBufferedWriter(outfile.toPath(), charset);
+                    while ((line = r.readLine()) != null) {
+                        if (outfile.getName().toUpperCase().contains(".XML")) {
+                            w.write(line.replaceAll("><", ">\n<"));
+                            //System.out.println(line.replaceAll("><", ">\n<"));
+                        } else {
+                            w.write(line);
+                            //System.out.println(line);
+                        }
                     }
-                    else {
-                        w.write(line);
-                        System.out.println(line);
-                    }
+                    //close the sendFile
+                    w.close();
                 }
-                //close the sendFile
-                w.close();
             }catch (Exception e){
-                System.out.println("Exception in CustomHttpClient.writeToFile");
+                System.out.println("Exception in [CustomHttpClient.writeToFile]:" + e.toString());
             }
         }
         public String getLastHttpRequestStatus(){
             return lastHttpRequestStatus;
         }
 
+        public void addTextParametr(String param, String paramValue){
+            if(builder==null)
+            builder = MultipartEntityBuilder.create();
+            builder.addTextBody(param, paramValue, ContentType.TEXT_PLAIN);
+        }
 }

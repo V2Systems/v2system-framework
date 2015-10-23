@@ -17,7 +17,11 @@ public class CustomFile {
     String lastLine;
     long lineCounter=0;
     File file;
+    static BufferedReader lineReader;
 
+    public CustomFile(){
+
+    }
     public String readCompleteFile(){
         try {
             String stringFileContent="";
@@ -39,6 +43,14 @@ public class CustomFile {
         }
     }
 
+    public String readLine(){
+        try {
+            return lineReader.readLine();
+        }catch (Exception e){
+            System.out.println("Exception " +this.getClass()+".Reading File");
+            return null;
+        }
+    }
     public String readLastLine(){
         if(lastLine==null){
             readCompleteFile();
@@ -87,7 +99,7 @@ public class CustomFile {
             }
             return true;
         } catch (Exception e) {
-            System.out.println("Exception in CustomFile.createFileName(): Error creating empty file");
+            System.out.println("Exception in " +this.getClass()+".createFileName(): Error creating empty file - " + fileName);
             return false;
         }
     }
@@ -105,5 +117,14 @@ public class CustomFile {
     public void setFileName(String fileName) {
         this.fileName = fileName;
         file = new File(fileName);
+        try{
+            if (fileExist()) {
+                Path path = Paths.get(fileName);
+                lineReader = Files.newBufferedReader(path, ENCODING);
+            }
+        }catch (Exception e){
+            System.out.println("Exception " +this.getClass()+".setFileName");
+        }
+
     }
 }

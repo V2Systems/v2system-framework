@@ -59,6 +59,9 @@ public class ListKeyValuePair {
     public KeyValuePair getKeyValuePairByKey(int index){
             return keyValuePairList.get(index);
     }
+    public void setKeyValuePairSeparator(char separator){
+        keyValuePairSeperator=separator;
+    }
 
     public int size(){
         return keyValuePairList.size();

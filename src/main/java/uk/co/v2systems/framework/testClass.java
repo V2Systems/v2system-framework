@@ -7,10 +7,7 @@ import uk.co.v2systems.framework.http.CustomHttpClient;
 import uk.co.v2systems.framework.server.CustomFtpServer;
 import uk.co.v2systems.framework.shell.CustomSshClient;
 import uk.co.v2systems.framework.shell.CustomTelnetClient;
-import uk.co.v2systems.framework.utils.CustomDate;
-import uk.co.v2systems.framework.utils.KeyValuePair;
-import uk.co.v2systems.framework.utils.ListKeyValuePair;
-import uk.co.v2systems.framework.utils.Methods;
+import uk.co.v2systems.framework.utils.*;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -105,9 +102,10 @@ public class testClass {
                 System.out.print(file.getNumberOfLines() + ": ");
                 System.out.print(file.readLastLine());
 
-                ListKeyValuePair l= new ListKeyValuePair();
-                l.add("Asset:abc,id:pankaj",',');
-                l.add("id:pankajupdated",',');
+                ListWithKey l= new ListWithKey();
+                l.addRow("uriId|A| //*[@uriId]",'|');
+                l.addRow("TitleMedium|T|//Title//*[name()='title:TitleMedium']",'|');
+                l.getRow("TitleMedium");
 
             }catch(Exception e){
                 System.out.println("I am in main: " + e);

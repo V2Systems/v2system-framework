@@ -120,12 +120,13 @@ Add element to the end of searched nodelist
             XPath xpath = factory.newXPath();
             XPathExpression expr = xpath.compile(xPath);
             NodeList nodeList= (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            /* For debugging
             System.out.println("Number of Elements Found: " + nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element element=(Element)nodeList.item(i);
                 System.out.println("<" + element.getNodeName() + ">" + element.getTextContent());
 
-            }
+            }*/
             return nodeList;
         } catch (Exception e) {
             System.out.println("Exception in CustomXml.findElementsByXpath :: " + e);
